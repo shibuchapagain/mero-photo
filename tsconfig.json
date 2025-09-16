@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs", // Or "esnext"
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true, // Add this line
+    "strictNullChecks": false, // This may also help with some type issues
+    "noImplicitAny": false, // This can also resolve some type-related errors
+    "strictBindCallApply": false, // Another option to consider
+    "forceConsistentCasingInFileNames": false // May resolve file casing issues
+  },
+  "exclude": ["node_modules", "dist"]
+}
