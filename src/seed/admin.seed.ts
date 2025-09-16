@@ -1,45 +1,56 @@
 import { NestFactory } from '@nestjs/core';
-import { DatabaseModule } from 'src/config/database.config';
-import { MongoDBService } from 'src/shared/mongodb.service';
-import { Role } from 'src/types/role';
+import { Model } from 'mongoose';
+import { getModelToken } from '@nestjs/mongoose';
+import { User } from '../modules/admin/user/user.model';
+import { AppModule } from '../app.module';
+import { Role } from '../types/role';
+import * as argon from 'argon2';
 
-export async function seed() {
-  const appContext = await NestFactory.createApplicationContext(DatabaseModule);
+async function seed() {
+  const app = await NestFactory.createApplicationContext(AppModule);
+  const userModel = app.get<Model<User>>(getModelToken(User.name));
 
   try {
-    const mongoService = appContext.get(MongoDBService);
+    const superAdmin = await userModel.findOne({ role: Role.SUPER_ADMIN });
 
-    const superAdmin = await mongoService.userModel.findOne({ role: Role.SUPER_ADMIN });
-    const admin = await mongoService.userModel.findOne({ role: Role.ADMIN });
-
-    if (!superAdmin) {
-      await mongoService.userModel.create({
+    if (superAdmin) return;
+    const hashPassword = await argon.hash('Pass@123');
+    const usersToSeed = [
+      {
         firstName: 'Super',
         lastName: 'Admin',
         email: 'superadmin@system.com',
-        password: 'Pass@123',
+        password: hashPassword,
         role: Role.SUPER_ADMIN,
-      });
-      console.log('✅ Super Admin created');
-    } else {
-      console.log('ℹ️ Super Admin already exists');
-    }
-
-    if (!admin) {
-      await mongoService.userModel.create({
+        isVerified: true,
+      },
+      {
         firstName: 'Admin',
         lastName: 'User',
         email: 'admin@system.com',
-        password: 'Pass@123',
+        password: hashPassword,
         role: Role.ADMIN,
-      });
-      console.log('✅ Admin created');
-    } else {
-      console.log('ℹ️ Admin already exists');
-    }
+        isVerified: true,
+      },
+      {
+        firstName: 'Normal',
+        lastName: 'User',
+        email: 'user@system.com',
+        password: hashPassword,
+        role: Role.USER,
+        isVerified: true,
+      },
+    ];
+    await userModel.insertMany(usersToSeed);
+    console.log('Database seeded successfully!');
   } catch (error) {
-    console.error('❌ Error during seeding', error);
+    console.error('Error seeding database:', error);
   } finally {
-    await appContext.close();
+    await app.close();
   }
 }
+
+//
+seed()
+  .then(() => console.log('Seed Completed'))
+  .catch((error) => console.log(error));

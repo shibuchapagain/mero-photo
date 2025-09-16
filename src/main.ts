@@ -17,11 +17,8 @@ async function bootstrap() {
   const httpAdapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new HttpExceptionFilter(httpAdapterHost));
 
-  // seed()
-  //   .then(() => console.log('Seed completed'))
-  //   .catch((error) => console.log(error));
-
   const port = process.env.PORT || 3000;
+
   await app.listen(port);
   console.log(`🚀 Server running on http://localhost:${port}`);
 }

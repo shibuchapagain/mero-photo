@@ -6,7 +6,7 @@ import { Role } from '../../../types/role';
 
 /** -------- Types -------- */
 export interface UserMethods {
-  comparePassword(plain: string): Promise<boolean>;
+  comparePassword(hashPassword: string, plainPassword: string): Promise<boolean>;
 }
 
 export interface UserModel extends Model<UserDocument, UserMethods> {
@@ -54,6 +54,10 @@ UserSchema.statics.softDelete = async function (id: Types.ObjectId) {
 };
 
 /** Instance method */
-UserSchema.methods.comparePassword = async function (this: UserDocument, plain: string): Promise<boolean> {
-  return await argon.verify(this.password, plain);
+UserSchema.methods.comparePassword = async function (hashPassword: string, plainPassword: string): Promise<boolean> {
+  try {
+    return await argon.verify(hashPassword, plainPassword);
+  } catch (err) {
+    console.log(err);
+  }
 };

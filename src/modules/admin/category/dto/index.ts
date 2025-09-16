@@ -24,4 +24,8 @@ export const CreateCategorySchema = z.object({
   }),
 });
 
+export const UpdateCategorySchema = CreateCategorySchema.partial();
+
+//
 export class ICreateCategoryDto extends createZodDto(CreateCategorySchema) {}
+export class IUpdateCategoryDto extends createZodDto(UpdateCategorySchema) {}

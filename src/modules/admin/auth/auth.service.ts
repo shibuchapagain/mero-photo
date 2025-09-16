@@ -46,7 +46,7 @@ export class AuthService {
       throw new BadRequestException('You are Deactivated, Please contact our support team');
     }
 
-    const isValidPassword = await user.comparePassword(data.password);
+    const isValidPassword = await user.comparePassword(user.password, data.password);
     if (!isValidPassword) throw new BadRequestException('Invalid credentials');
 
     const { accessToken, refreshToken } = this.jwtService.generateTokens({
