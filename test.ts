@@ -67,15 +67,12 @@
 /**
  * Vehicle Plan:
  * _id
- * perHour: in RS
- * perDay: in RS
- * perWeek: in RS
- * perMonth: in RS
- * perYear: in RS
- * currency
+ * charge: float
+ * package: enum (PER_HOUR / PER_DAY / PER WEEK / PER MONTH / PER YEAR / CUSTOM)
+ * description
+ * user: ADMIN / SUPER_ADMIN
  * createdById: _id (admin id)
  * updatedById: _id (admin id)
- * company
  * createdAt: DateTime
  * updatedAt: DateTime
  */

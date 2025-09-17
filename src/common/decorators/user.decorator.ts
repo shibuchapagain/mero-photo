@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 
 import { Role } from 'src/types/role';
-import { IUser } from 'src/types/global';
+import type { IUser } from 'src/types/global';
 
 /**
  * Admin User Decorator

@@ -84,22 +84,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       };
     }
 
-    /* -------------------- Logging -------------------- */
-    // Detailed logs in development, minimal in production
-    // const logPayload = {
-    //   status: httpStatus,
-    //   code: responseBody.code,
-    //   message: responseBody.message,
-    //   errors: responseBody.errors,
-    //   stack: exception instanceof Error ? exception.stack : undefined,
-    // };
-
-    // if (process.env.NODE_ENV === 'production') {
-    //   this.logger.error(`[${httpStatus}] ${responseBody.code ?? 'ERROR'}: ${responseBody.message}`);
-    // } else {
-    //   this.logger.error(`Exception caught:\n${JSON.stringify(logPayload, null, 2)}`);
-    // }
-
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
   }
 }
