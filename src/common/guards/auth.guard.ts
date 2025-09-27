@@ -78,6 +78,8 @@ export class AuthGuard implements CanActivate {
     //
     return {
       _id: user._id.toString(),
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       role: user.role,
     };
@@ -97,6 +99,8 @@ export class AuthGuard implements CanActivate {
     //
     return {
       _id: user._id.toString(),
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       role: user.role,
     };

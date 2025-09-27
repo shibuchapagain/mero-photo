@@ -102,7 +102,8 @@
 /**
  * History Logs
  * _id
- * name
+ * title (pre-defined templates)
+ * userSnapShot (this is the snapshot who did this.)
  * role: ADMIN / USER
  * type: VEHICLE / VEHICLE PLAN / BOOKING
  * method: "CREATED" / "UPDATED" / "DELETED"

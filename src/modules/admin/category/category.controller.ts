@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { ICreateCategoryDto } from './dto';
+import { ICreateCategoryDto, IUpdateCategoryDto } from './dto';
 import { ApiResponse } from '../../../utils/http-response.util';
 import { AdminUser } from '../../../common/decorators/user.decorator';
 import { IUser } from '../../../types/global';
@@ -40,6 +40,26 @@ export class CategoryController {
     return new ApiResponse({
       message: 'Category fetched successfully',
       data: response,
+    });
+  }
+
+  @Patch(':id')
+  async update(@AdminUser() user: IUser, @MongoIdParam() id: string, @Body() data: IUpdateCategoryDto) {
+    await this.categoryService.update(user, id, data);
+
+    //
+    return new ApiResponse({
+      message: 'Category updated successfully',
+    });
+  }
+
+  @Delete(':id')
+  async delete(@AdminUser() user: IUser, @MongoIdParam() id: string) {
+    await this.categoryService.delete(user, id);
+
+    //
+    return new ApiResponse({
+      message: 'Category deleted successfully',
     });
   }
 }

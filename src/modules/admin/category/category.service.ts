@@ -7,10 +7,15 @@ import { buildUserQuery } from '../../../utils/build-query.util';
 
 import type { IUser } from '../../../types/global';
 import type { ICreateCategoryDto, IUpdateCategoryDto } from './dto';
+import { HistoryLogService } from '../history-logs/history-log.service';
+import { HistoryLogMethodEnum, HistoryLogTypeEnum } from '../history-logs/history-log.type';
 
 @Injectable()
 export class CategoryService {
-  constructor(@InjectModel(Category.name) private categoryModel: Model<Category>) {}
+  constructor(
+    @InjectModel(Category.name) private categoryModel: Model<Category>,
+    private readonly historyLogService: HistoryLogService,
+  ) {}
 
   async _getOne(user: IUser, id: string) {
     const category = await this.categoryModel.findOne(
@@ -40,6 +45,18 @@ export class CategoryService {
       user: user._id,
     });
 
+    await this.historyLogService.createHistory({
+      title: data.title,
+      userSnapShot: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+      },
+      type: HistoryLogTypeEnum.CATEGORY,
+      method: HistoryLogMethodEnum.CREATED,
+    });
+
     //
     return category;
   }
@@ -51,29 +68,33 @@ export class CategoryService {
           user: user._id,
         }),
       )
-      .populate('user');
+      .populate('user', ['id', 'firstName', 'lastName', 'role'])
+      .select(['id', 'title', 'description', 'createdAt']);
 
     //
     return categories;
   }
 
   async getById(user: IUser, id: string) {
-    const categories = await this.categoryModel
+    const category = await this.categoryModel
       .findOne(
         buildUserQuery(user, {
           _id: id,
         }),
       )
-      .populate('user');
+      .populate('user', ['id', 'email', 'lastName', 'role']);
+
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
 
     //
-    return categories;
+    return category;
   }
 
   async update(user: IUser, id: string, data: IUpdateCategoryDto) {
     await this._getOne(user, id);
-
-    return await this.categoryModel.findByIdAndUpdate(id, {
+    await this.categoryModel.findByIdAndUpdate(id, {
       ...(data.title && {
         title: data.title,
       }),
@@ -81,16 +102,13 @@ export class CategoryService {
         description: data.description,
       }),
     });
+    return;
   }
 
   async delete(user: IUser, id: string) {
-    const category = await this._getOne(user, id);
-
-    // check vehicle are linked with this category or not
-
-    //
-    category.deleteOne();
-    return await category.save();
+    await this._getOne(user, id);
+    await this.categoryModel.findByIdAndDelete(id);
+    return;
   }
 }
 
