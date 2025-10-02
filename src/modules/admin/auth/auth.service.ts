@@ -5,12 +5,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import type { ILoginDto, IRegisterDto } from './dto';
 import { User, UserDocument } from '../user/user.model';
 import { JwtService } from '../../../shared/jwt.service';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument, User>,
     private readonly jwtService: JwtService,
+    private readonly redisService: RedisService,
   ) {}
 
   async register(data: IRegisterDto) {
@@ -24,6 +26,8 @@ export class AuthService {
       email: data.email,
       password: data.password,
     });
+
+    await this.redisService.set('register', JSON.stringify(user));
 
     //
     return {

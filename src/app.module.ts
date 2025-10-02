@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
 
@@ -11,11 +11,23 @@ import { HttpExceptionFilter } from './common/exceptions/http-exception.filter';
 import { JwtService } from './shared/jwt.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GlobalGuard } from './common/guards/global.guard';
+import { RedisModule } from './redis/redis.module';
+// import * as dotenv from 'dotenv';
+// dotenv.config();
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/mero-photo'),
     ConfigModule.forRoot({ isGlobal: true }),
+    // MongooseModule.forRoot(process.env.MONGODB_URI),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        const uri = configService.get<string>('MONGODB_URI');
+        return { uri };
+      },
+      inject: [ConfigService],
+    }),
+    RedisModule,
     DatabaseModule,
     AdminModule,
   ],
