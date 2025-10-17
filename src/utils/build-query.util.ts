@@ -1,7 +1,6 @@
 import { FilterQuery } from 'mongoose';
-
-import { Role } from 'src/types/role';
-import type { IUser } from 'src/types/global';
+import { IUser } from '../types/global';
+import { Role } from '../types/role';
 
 /**
  * Build a Mongoose filter that automatically limits access

@@ -5,7 +5,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import type { ILoginDto, IRegisterDto } from './dto';
 import { User, UserDocument } from '../user/user.model';
 import { JwtService } from '../../../shared/jwt.service';
-import { RedisService } from 'src/redis/redis.service';
+import { RedisService } from '../../../redis/redis.service';
 
 @Injectable()
 export class AuthService {

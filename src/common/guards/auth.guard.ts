@@ -14,7 +14,7 @@ import type { IUser } from '../../types/global';
 import { IS_PUBLIC_KEY } from '../decorators/route-type.decorator';
 
 import { JwtService } from '../../shared/jwt.service';
-import { MongoDBService } from 'src/shared/mongodb.service';
+import { MongoDBService } from '../../shared/mongodb.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

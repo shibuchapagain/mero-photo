@@ -6,7 +6,7 @@ import { CustomZodValidationPipe } from '../../../pipelines/zod-custom.pipe';
 
 import { LoginSchema, RegisterSchema } from './dto';
 import type { ILoginDto, IRegisterDto } from './dto';
-import { Public } from 'src/common/decorators/route-type.decorator';
+import { Public } from '../../../common/decorators/route-type.decorator';
 
 /**
  * Auth Controller

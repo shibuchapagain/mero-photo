@@ -24,8 +24,9 @@
 // database.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from 'src/modules/admin/user/user.model';
-import { MongoDBService } from 'src/shared/mongodb.service';
+import { User, UserSchema } from '../modules/admin/user/user.model';
+import { MongoDBService } from '../shared/mongodb.service';
+
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],

@@ -1,4 +1,4 @@
-import { Role } from 'src/types/role';
+import { Role } from '../../../types/role';
 
 export interface IUserSnapShot {
   firstName: string;
